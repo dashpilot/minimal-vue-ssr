@@ -17,6 +17,14 @@ Minimal Vue 3 SSR provides the simplest possible implementation of server-side r
 - **No complex configuration** - just Vue and Express
 - **Flexible deployment** - works on Node.js servers or serverless platforms like Vercel
 
+## Use this template
+
+To use this template, click the 'use this template'-button on Github, or install it directly into your current working directory using Degit:
+
+```bash
+degit dashpilot/minimal-vue-ssr
+```
+
 ## Quick Start
 
 ```bash
