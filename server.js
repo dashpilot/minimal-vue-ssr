@@ -3,7 +3,7 @@ const path = require('path');
 const express = require('express');
 
 const isProduction = process.env.NODE_ENV === 'production';
-const port = 3010;
+const port = 3011;
 
 async function createServer() {
 	const app = express();
