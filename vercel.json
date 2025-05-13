@@ -1,4 +1,5 @@
 {
 	"rewrites": [{ "source": "/(.*)", "destination": "/api/server" }],
-	"buildCommand": "npm run build"
+	"buildCommand": "npm run build",
+	"outputDirectory": "dist"
 }
