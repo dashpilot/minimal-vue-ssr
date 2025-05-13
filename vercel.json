@@ -1,22 +1,4 @@
 {
-	"version": 2,
-	"builds": [
-		{
-			"src": "package.json",
-			"use": "@vercel/node",
-			"config": {
-				"buildCommand": "npm run build"
-			}
-		}
-	],
-	"routes": [
-		{
-			"src": "/assets/(.*)",
-			"dest": "/dist/client/assets/$1"
-		},
-		{
-			"src": "/(.*)",
-			"dest": "/vercel.js"
-		}
-	]
+	"rewrites": [{ "source": "/(.*)", "destination": "/api/server" }],
+	"buildCommand": "npm run build"
 }
