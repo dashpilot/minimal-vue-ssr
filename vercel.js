@@ -1,7 +1,6 @@
 // vercel.js - Adapter for Vercel Serverless Functions
 const fs = require('fs');
 const path = require('path');
-const { createServer: createViteServer } = require('vite');
 
 // Cached production assets
 let template;
@@ -28,8 +27,9 @@ async function getProductionDependencies() {
 	return { template, render, manifest };
 }
 
+let vite;
 // This is the main handler for Vercel
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
 	try {
 		const url = req.url || '/';
 
@@ -45,13 +45,16 @@ export default async function handler(req, res) {
 
 			// Send rendered HTML
 			res.setHeader('Content-Type', 'text/html');
-			res.status(200).send(html);
+			return res.status(200).send(html);
 		} else {
 			// In development: Use Vite's development server
-			const vite = await createViteServer({
-				server: { middlewareMode: true },
-				appType: 'custom'
-			});
+			if (!vite) {
+				const { createServer } = require('vite');
+				vite = await createServer({
+					server: { middlewareMode: true },
+					appType: 'custom'
+				});
+			}
 
 			// Apply Vite transforms to the template
 			let template = fs.readFileSync(path.resolve(__dirname, 'index.html'), 'utf-8');
@@ -68,14 +71,14 @@ export default async function handler(req, res) {
 
 			// Send rendered HTML
 			res.setHeader('Content-Type', 'text/html');
-			res.status(200).send(html);
+			return res.status(200).send(html);
 		}
 	} catch (e) {
 		// Handle errors
 		console.error(e.stack);
 		res.status(500).send(`Server Error: ${e.message}`);
 	}
-}
+};
 
 // For local development outside Vercel
 if (require.main === module) {
@@ -84,7 +87,7 @@ if (require.main === module) {
 	const app = express();
 	const port = process.env.PORT || 3000;
 
-	app.use('*', handler);
+	app.use('*', (req, res) => module.exports(req, res));
 
 	app.listen(port, () => {
 		console.log(`Local development server started at http://localhost:${port}`);
